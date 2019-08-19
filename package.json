@@ -1,0 +1,20 @@
+{
+  "name": "pvp-calculator",
+  "version": "0.0.1",
+  "description": "Calculator for PVP meta",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "test": "jest"
+  },
+  "author": "Jesse Kawell <jakawell@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^12.7.2",
+    "pokemongo-game-master": "^1.0.4"
+  },
+  "devDependencies": {
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
+  }
+}
