@@ -22,8 +22,8 @@ export class Pokemon {
     this.species = source.pokemonSettings.pokemonId;
     this.form = (source.pokemonSettings.form || 'NORMAL').replace(this.species + '_', '');
     this.types = [
-      source.pokemonSettings.type,
-      source.pokemonSettings.type2,
+      (source.pokemonSettings.type || '').split('_', 2)[0], // remove the `POKEMON_` prefix,
+      (source.pokemonSettings.type2 || '').split('_', 2)[0], // remove the `POKEMON_` prefix,
     ];
     this.fastMoves = source.pokemonSettings.quickMoves;
     this.chargeMoves = source.pokemonSettings.cinematicMoves;
