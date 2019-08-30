@@ -1,22 +1,31 @@
+import util from 'util';
+jest.spyOn(util, 'promisify').mockReturnValue(async () => { return; });
+import PokemongoGameMaster from 'pokemongo-game-master';
 import { Calculator } from '../src/models';
 import { IGameMaster } from '../src/interfaces';
-import fakeGameMaster from './mockData/mockGameMaster.json';
+import mockGameMaster from './mockData/mockGameMaster.json';
 
 let calculator: Calculator;
 
 beforeEach(() => {
   calculator = new Calculator();
+  jest.spyOn(PokemongoGameMaster, 'getVersion').mockResolvedValue(mockGameMaster);
+});
+
+afterAll(() => {
+  jest.restoreAllMocks();
 });
 
 test('should download game master', async () => {
   await calculator.downloadGameMaster();
   expect(calculator.master).not.toBeNull();
-  expect((calculator.master as IGameMaster).itemTemplates.length).toBeGreaterThan(0);
+  expect((calculator.master as IGameMaster).itemTemplates.length).toBe(10);
 });
 
 test('should import game master', async () => {
-  await calculator.importGameMaster(fakeGameMaster as IGameMaster);
-  expect(calculator.pokemonList.size).toEqual(1);
+  await calculator.importGameMaster(mockGameMaster as IGameMaster);
+  expect(calculator.pokemonList.size).toEqual(2);
+  expect(calculator.movesList.size).toEqual(2);
 });
 
 test('should run the calculator', async () => {
