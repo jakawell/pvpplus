@@ -13,6 +13,9 @@
         },
         "ordered-imports": {
             "severity": "off"
+        },
+        "object-literal-sort-keys": {
+            "severity": "off"
         }
     },
     "rulesDirectory": []

@@ -3,14 +3,15 @@ import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 import PokemongoGameMaster from 'pokemongo-game-master';
-import { IGameMaster, IPokemonTemplate } from '../interfaces';
-import { Pokemon } from './';
+import { IGameMaster, IPokemonTemplate, IPveMoveTemplate, IPvpMoveTemplate } from '../interfaces';
+import { Pokemon, Move } from './';
 
 const writeFile = promisify(fs.writeFile);
 
 export class Calculator {
 
   public pokemonList: Map<string, Pokemon> = new Map<string, Pokemon>();
+  public movesList: Map<string, Move> = new Map<string, Move>();
   public master: IGameMaster | null = null;
 
   private noNormalForm: string[] = [
@@ -37,6 +38,8 @@ export class Calculator {
    */
   public async importGameMaster(gameMaster: IGameMaster): Promise<void> {
     for (const template of gameMaster.itemTemplates) {
+
+      // IMPORT POKEMON
       if (template.templateId.startsWith('V') && template.templateId.substring(6, 13) === 'POKEMON') {
         const pokemon = new Pokemon(template as IPokemonTemplate);
         // for normal forms that have no normal form, ignore
@@ -62,6 +65,28 @@ export class Calculator {
           }
         }
       }
+
+      // IMPORT PVE MOVES
+      if (template.templateId.startsWith('V') && template.templateId.substring(6, 10) === 'MOVE') {
+        const move = new Move();
+        move.updatePveStats(template as IPveMoveTemplate);
+        if (this.movesList.has(move.id)) {
+          (this.movesList.get(move.id) as Move).updatePveStats(template as IPveMoveTemplate);
+        } else {
+          this.movesList.set(move.id, move);
+        }
+      }
+
+      // IMPORT PVP MOVES
+      if (template.templateId.startsWith('COMBAT_V') && template.templateId.substring(13, 17) === 'MOVE') {
+        const move = new Move();
+        move.updatePvpStats(template as IPvpMoveTemplate);
+        if (this.movesList.has(move.id)) {
+          (this.movesList.get(move.id) as Move).updatePvpStats(template as IPvpMoveTemplate);
+        } else {
+          this.movesList.set(move.id, move);
+        }
+      }
     }
   }
 
@@ -82,6 +107,14 @@ export class Calculator {
         + `\n  types: ${pokemon.types}`
         + `\n  fast:   ${pokemon.fastMoves}`
         + `\n  charge: ${pokemon.chargeMoves}`);
+    }
+
+    for (const [id, move] of this.movesList) {
+      console.log(
+        `${id}:`
+        + `\n  type:   ${move.type}`
+        + `\n  PVE:    ${move.pveStats.power}`
+        + `\n  PVP:    ${move.pvpStats.power}`);
     }
 
     console.log('Done.');

@@ -342,6 +342,35 @@
         "damageWindowEndMs": 2550,
         "energyDelta": -50
       }
+    },
+    {
+      "templateId": "V0215_MOVE_RAZOR_LEAF_FAST",
+      "moveSettings": {
+        "movementId": "RAZOR_LEAF_FAST",
+        "animationId": 4,
+        "pokemonType": "POKEMON_TYPE_GRASS",
+        "power": 13,
+        "accuracyChance": 1,
+        "staminaLossScalar": 0.01,
+        "trainerLevelMin": 1,
+        "trainerLevelMax": 100,
+        "vfxName": "razor_leaf_fast",
+        "durationMs": 1000,
+        "damageWindowStartMs": 600,
+        "damageWindowEndMs": 850,
+        "energyDelta": 7
+      }
+    },
+    {
+      "templateId": "COMBAT_V0215_MOVE_RAZOR_LEAF_FAST",
+      "combatMove": {
+        "uniqueId": "RAZOR_LEAF_FAST",
+        "type": "POKEMON_TYPE_GRASS",
+        "power": 11,
+        "vfxName": "razor_leaf_fast",
+        "durationTurns": 1,
+        "energyDelta": 4
+      }
     }
   ]
 }
