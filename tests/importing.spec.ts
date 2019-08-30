@@ -1,5 +1,6 @@
 import { Calculator } from '../src/models';
 import { IGameMaster } from '../src/interfaces';
+import fakeGameMaster from './mockData/mockGameMaster.json';
 
 let calculator: Calculator;
 
@@ -14,7 +15,16 @@ test('should download game master', async () => {
 });
 
 test('should import game master', async () => {
-  await calculator.downloadGameMaster();
-  await calculator.importGameMaster(calculator.master as IGameMaster);
-  expect(calculator.pokemonList.size).toBeGreaterThanOrEqual(550);
+  await calculator.importGameMaster(fakeGameMaster as IGameMaster);
+  expect(calculator.pokemonList.size).toEqual(1);
+});
+
+test('should run the calculator', async () => {
+  const downloadSpy = jest.spyOn(calculator, 'downloadGameMaster');
+  const importSpy = jest.spyOn(calculator, 'importGameMaster');
+  console.log = jest.fn(); // tslint:disable-line: no-console
+  await calculator.run();
+  expect(downloadSpy).toHaveBeenCalled();
+  expect(importSpy).toHaveBeenCalled();
+  expect(console.log).toHaveBeenCalled(); // tslint:disable-line: no-console
 });
