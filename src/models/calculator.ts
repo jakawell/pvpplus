@@ -4,13 +4,13 @@ import path from 'path';
 import { promisify } from 'util';
 import PokemongoGameMaster from 'pokemongo-game-master';
 import { IGameMaster, IPokemonTemplate, IPveMoveTemplate, IPvpMoveTemplate } from '../interfaces';
-import { Pokemon, Move } from './';
+import { PokemonSpecies, Move } from './';
 
 const writeFile = promisify(fs.writeFile);
 
 export class Calculator {
 
-  public pokemonList: Map<string, Pokemon> = new Map<string, Pokemon>();
+  public speciesList: Map<string, PokemonSpecies> = new Map<string, PokemonSpecies>();
   public movesList: Map<string, Move> = new Map<string, Move>();
   public master: IGameMaster | null = null;
 
@@ -31,32 +31,32 @@ export class Calculator {
 
       // IMPORT POKEMON
       if (template.templateId.startsWith('V') && template.templateId.substring(6, 13) === 'POKEMON') {
-        const pokemon = new Pokemon(template as IPokemonTemplate);
+        const pokemon = new PokemonSpecies(template as IPokemonTemplate);
         // for normal and non-shadow/purified forms, add it if we haven't added it yet
         if (!pokemon.form.endsWith('SHADOW')
           && !pokemon.form.endsWith('PURIFIED')
-          && !this.pokemonList.has(pokemon.id)) {
-          this.pokemonList.set(pokemon.id, pokemon);
+          && !this.speciesList.has(pokemon.id)) {
+          this.speciesList.set(pokemon.id, pokemon);
 
         // replace normal form moves with shadow moves, since they have the same moves plus more
         } else if (pokemon.form.endsWith('SHADOW')) {
-          const normalPokemon: Pokemon | undefined = this.pokemonList.get(
-            Pokemon.generateId(pokemon.speciesId, 'NORMAL'),
+          const normalPokemon: PokemonSpecies | undefined = this.speciesList.get(
+            PokemonSpecies.generateId(pokemon.speciesId, 'NORMAL'),
           );
           if (normalPokemon) {
-            (normalPokemon as Pokemon).chargeMoves = pokemon.chargeMoves;
+            (normalPokemon as PokemonSpecies).chargeMoves = pokemon.chargeMoves;
           } else {
             pokemon.form = 'NORMAL';
-            this.pokemonList.set(pokemon.id, pokemon);
+            this.speciesList.set(pokemon.id, pokemon);
           }
         }
 
         // if it has a non-normal form, and previously had a "formless" entry, remove the "formless" one
-        const previousNormal: Pokemon | undefined = this.pokemonList.get(
-          Pokemon.generateId(pokemon.speciesId, 'NORMAL'),
+        const previousNormal: PokemonSpecies | undefined = this.speciesList.get(
+          PokemonSpecies.generateId(pokemon.speciesId, 'NORMAL'),
         );
-        if (!pokemon.form.endsWith('NORMAL') && previousNormal && (previousNormal as Pokemon).isFormless) {
-          this.pokemonList.delete(previousNormal.id);
+        if (!pokemon.form.endsWith('NORMAL') && previousNormal && (previousNormal as PokemonSpecies).isFormless) {
+          this.speciesList.delete(previousNormal.id);
         }
       }
 
@@ -95,7 +95,7 @@ export class Calculator {
     console.log('Importing data...');
     await this.importGameMaster(this.master as IGameMaster);
 
-    for (const [id, pokemon] of this.pokemonList) {
+    for (const [id, pokemon] of this.speciesList) {
       console.log(
         `${id}:`
         + `\n  types: ${pokemon.types}`

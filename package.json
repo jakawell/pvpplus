@@ -4,12 +4,13 @@
   "description": "Calculator for PVP meta",
   "scripts": {
     "start": "ts-node src/index.ts",
+    "lint": "tslint -p .",
     "test": "jest tests --coverage"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test"
+      "pre-commit": "npm run lint && npm test",
+      "pre-push": "npm run lint && npm test"
     }
   },
   "author": "Jesse Kawell <jakawell@gmail.com>",

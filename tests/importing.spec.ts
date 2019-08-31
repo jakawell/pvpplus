@@ -24,8 +24,8 @@ test('should download game master', async () => {
 
 test('should import game master', async () => {
   await calculator.importGameMaster(mockGameMaster as IGameMaster);
-  expect(calculator.pokemonList.size).toEqual(3);
-  expect(Array.from<string>(calculator.pokemonList.keys())).toEqual([
+  expect(calculator.speciesList.size).toEqual(3);
+  expect(Array.from<string>(calculator.speciesList.keys())).toEqual([
     'VENUSAUR_NORMAL',
     'BLASTOISE_NORMAL',
     'GIRATINA_ALTERED',

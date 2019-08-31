@@ -1,11 +1,11 @@
 import { IPokemonTemplate } from '../src/interfaces';
-import { Pokemon } from '../src/models';
+import { PokemonSpecies } from '../src/models';
 import fakeGameMaster from './mockData/mockGameMaster.json';
 
-let pokemon: Pokemon;
+let pokemon: PokemonSpecies;
 
 beforeEach(() => {
-  pokemon = new Pokemon(fakeGameMaster.itemTemplates[0] as IPokemonTemplate);
+  pokemon = new PokemonSpecies(fakeGameMaster.itemTemplates[0] as IPokemonTemplate);
 });
 
 test('should import all fields properly', () => {

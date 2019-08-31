@@ -1,8 +1,8 @@
 import { IPokemonTemplate } from '../interfaces';
 
-export class Pokemon {
-  public static generateId(species: string, form: string): string {
-    return `${species}_${form}`;
+export class PokemonSpecies {
+  public static generateId(speciesId: string, form: string): string {
+    return `${speciesId}_${form}`;
   }
 
   public speciesId: string;
@@ -19,7 +19,7 @@ export class Pokemon {
   public isFormless: boolean = false;
 
   public get id() {
-    return Pokemon.generateId(this.speciesId, this.form);
+    return PokemonSpecies.generateId(this.speciesId, this.form);
   }
 
   public constructor(source: IPokemonTemplate) {
