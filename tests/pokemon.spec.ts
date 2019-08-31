@@ -1,21 +1,23 @@
 import { IPokemonTemplate } from '../src/interfaces';
-import { PokemonSpecies } from '../src/models';
+import { PokemonSpecies, Pokemon } from '../src/models';
 import fakeGameMaster from './mockData/mockGameMaster.json';
 
-let pokemon: PokemonSpecies;
+let pokemon: Pokemon;
 
 beforeEach(() => {
-  pokemon = new PokemonSpecies(fakeGameMaster.itemTemplates[0] as IPokemonTemplate);
+  const species = new PokemonSpecies(fakeGameMaster.itemTemplates[0] as IPokemonTemplate);
+  pokemon = new Pokemon(species, 15.5, 10, 11, 12);
 });
 
 test('should import all fields properly', () => {
-  expect(pokemon.speciesId).toBe('VENUSAUR');
-  expect(pokemon.form).toBe('SHADOW');
-  expect(pokemon.id).toBe('VENUSAUR_SHADOW');
-  expect(pokemon.types).toEqual(['GRASS', 'POISON']);
-  expect(pokemon.fastMoves).toEqual(['RAZOR_LEAF_FAST', 'VINE_WHIP_FAST']);
-  expect(pokemon.chargeMoves).toEqual(['SLUDGE_BOMB', 'PETAL_BLIZZARD', 'SOLAR_BEAM', 'RETURN', 'FRUSTRATION']);
-  expect(pokemon.baseAttack).toBe(198);
-  expect(pokemon.baseDefense).toBe(189);
-  expect(pokemon.baseStamina).toBe(190);
+  expect(pokemon.species.id).toBe('VENUSAUR_SHADOW');
+  expect(pokemon.level).toBe(15.5);
+  expect(pokemon.attackIv).toBe(10);
+  expect(pokemon.defenseIv).toBe(11);
+  expect(pokemon.staminaIv).toBe(12);
+  expect(pokemon.attack).toBe(198 + 10);
+  expect(pokemon.defense).toBe(189 + 11);
+  expect(pokemon.stamina).toBe(190 + 12);
+  expect(pokemon.cpMultiplier).toBe(0.5259425113);
+  expect(pokemon.cp).toBe(1156);
 });
