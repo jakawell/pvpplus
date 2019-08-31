@@ -9,7 +9,7 @@ beforeEach(() => {
 });
 
 test('should import all fields properly', () => {
-  expect(pokemon.species).toBe('VENUSAUR');
+  expect(pokemon.speciesId).toBe('VENUSAUR');
   expect(pokemon.form).toBe('SHADOW');
   expect(pokemon.id).toBe('VENUSAUR_SHADOW');
   expect(pokemon.types).toEqual(['GRASS', 'POISON']);

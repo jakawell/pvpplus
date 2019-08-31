@@ -5,7 +5,7 @@ export class Pokemon {
     return `${species}_${form}`;
   }
 
-  public species: string;
+  public speciesId: string;
   public form: string;
   public types: string[];
   public fastMoves: string[];
@@ -13,14 +13,21 @@ export class Pokemon {
   public baseAttack: number;
   public baseDefense: number;
   public baseStamina: number;
+  /**
+   * Tracks if species was created without a specified form.
+   */
+  public isFormless: boolean = false;
 
   public get id() {
-    return Pokemon.generateId(this.species, this.form);
+    return Pokemon.generateId(this.speciesId, this.form);
   }
 
   public constructor(source: IPokemonTemplate) {
-    this.species = source.pokemonSettings.pokemonId;
-    this.form = (source.pokemonSettings.form || 'NORMAL').replace(this.species + '_', '');
+    this.speciesId = source.pokemonSettings.pokemonId;
+    this.form = (source.pokemonSettings.form || 'NORMAL').replace(this.speciesId + '_', '');
+    if (!source.pokemonSettings.form) { // default pokemon with no set form to "NORMAL", but mark them in case we need to remove them later
+      this.isFormless = true;
+    }
     this.types = [
       (source.pokemonSettings.type).split('_', 3)[2], // remove the `POKEMON_TYPE` prefix,
       (source.pokemonSettings.type2 || '').split('_', 3)[2], // remove the `POKEMON_TYPE` prefix,

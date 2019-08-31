@@ -16,6 +16,13 @@
         },
         "object-literal-sort-keys": {
             "severity": "off"
+        },
+        "max-line-length": {
+            "severity": "warn",
+            "options": {
+                "limit": 120,
+                "ignore-pattern": "^import |^export {(.*?)}|class [a-zA-Z]+ implements |//"
+            }
         }
     },
     "rulesDirectory": []

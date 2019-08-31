@@ -14,16 +14,6 @@ export class Calculator {
   public movesList: Map<string, Move> = new Map<string, Move>();
   public master: IGameMaster | null = null;
 
-  private noNormalForm: string[] = [
-    'BURMY',
-    'WORMADAM',
-    'CHERRIM',
-    'SHELLOS',
-    'GASTRODON',
-    'GIRATINA',
-    'SHAYMIN',
-  ];
-
   /**
    * Download the latest game master file and update "this.master" with the value.
    * @returns Promise<void>
@@ -42,10 +32,6 @@ export class Calculator {
       // IMPORT POKEMON
       if (template.templateId.startsWith('V') && template.templateId.substring(6, 13) === 'POKEMON') {
         const pokemon = new Pokemon(template as IPokemonTemplate);
-        // for normal forms that have no normal form, ignore
-        if (pokemon.form === 'NORMAL' && this.noNormalForm.includes(pokemon.species)) {
-          continue;
-        }
         // for normal and non-shadow/purified forms, add it if we haven't added it yet
         if (!pokemon.form.endsWith('SHADOW')
           && !pokemon.form.endsWith('PURIFIED')
@@ -55,7 +41,7 @@ export class Calculator {
         // replace normal form moves with shadow moves, since they have the same moves plus more
         } else if (pokemon.form.endsWith('SHADOW')) {
           const normalPokemon: Pokemon | undefined = this.pokemonList.get(
-            Pokemon.generateId(pokemon.species, 'NORMAL'),
+            Pokemon.generateId(pokemon.speciesId, 'NORMAL'),
           );
           if (normalPokemon) {
             (normalPokemon as Pokemon).chargeMoves = pokemon.chargeMoves;
@@ -63,6 +49,14 @@ export class Calculator {
             pokemon.form = 'NORMAL';
             this.pokemonList.set(pokemon.id, pokemon);
           }
+        }
+
+        // if it has a non-normal form, and previously had a "formless" entry, remove the "formless" one
+        const previousNormal: Pokemon | undefined = this.pokemonList.get(
+          Pokemon.generateId(pokemon.speciesId, 'NORMAL'),
+        );
+        if (!pokemon.form.endsWith('NORMAL') && previousNormal && (previousNormal as Pokemon).isFormless) {
+          this.pokemonList.delete(previousNormal.id);
         }
       }
 

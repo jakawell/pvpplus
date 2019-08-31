@@ -19,12 +19,18 @@ afterAll(() => {
 test('should download game master', async () => {
   await calculator.downloadGameMaster();
   expect(calculator.master).not.toBeNull();
-  expect((calculator.master as IGameMaster).itemTemplates.length).toBe(10);
+  expect((calculator.master as IGameMaster).itemTemplates.length).toBe(11);
 });
 
 test('should import game master', async () => {
   await calculator.importGameMaster(mockGameMaster as IGameMaster);
-  expect(calculator.pokemonList.size).toEqual(2);
+  expect(calculator.pokemonList.size).toEqual(3);
+  expect(Array.from<string>(calculator.pokemonList.keys())).toEqual([
+    'VENUSAUR_NORMAL',
+    'BLASTOISE_NORMAL',
+    'GIRATINA_ALTERED',
+  ]);
+
   expect(calculator.movesList.size).toEqual(2);
 });
 
