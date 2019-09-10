@@ -48,3 +48,5 @@ export interface IPvpMoveTemplate extends IItemTemplate {
 export interface IGameMaster {
   itemTemplates: IItemTemplate[];
 }
+
+export { IGameMasterImportOptions } from '../models/gameMasterImport';
